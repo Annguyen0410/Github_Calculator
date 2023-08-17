@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .calculator {
+        text-align: center;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    #resultContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    #inputDisplay {
+        flex: 1;
+        margin-right: 5px;
+        padding: 10px;
+        font-size: 18px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: right;
+    }
+    #notationDisplay {
+        font-size: 14px;
+        color: gray;
+        margin-bottom: 10px;
+    }
+    .button-row {
+        display: flex;
+        justify-content: center;
+    }
+    .button-row button {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+        margin: 5px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        outline: none;
+    }
+    .button-row button:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+</head>
+<body>
+    <div class="calculator">
+        <div id="notationDisplay"></div>
+        <div id="resultContainer">
+            <input type="text" id="inputDisplay" readonly>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendDecimal('.')">.</button>
+            <button onclick="calculate()">=</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendOperation('+')">+</button>
+            <button onclick="appendOperation('-')">-</button>
+            <button onclick="appendOperation('*')">*</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendOperation('/')">/</button>
+            <button onclick="calculateRoot()">√</button>
+            <button onclick="appendFunction('exponent')">x^</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendFunction('power')">^</button>
+            <button onclick="clearDisplay()">C</button>
+        </div>
+    
+</div>
+
+<script>
+    let currentInput = '';
+    let notation = '';
+    let lastOperation = '';
+
+    function appendToDisplay(value) {
+        currentInput += value;
+        updateDisplay();
+    }
+
+    function appendOperation(operator) {
+        if (currentInput !== '') {
+            currentInput += ' ' + operator + ' ';
+            lastOperation = operator;
+            notation = currentInput;
+            updateDisplay();
+        }
+    }
+
+    function appendFunction(func) {
+        if (currentInput !== '') {
+            currentInput = func + '(' + currentInput + ')';
+            notation = currentInput;
+            updateDisplay();
+        }
+    }
+
+    function appendDecimal() {
+        if (!currentInput.includes('.')) {
+            currentInput += '.';
+            updateDisplay();
+        }
+    }
+
+    function clearDisplay() {
+        currentInput = '';
+        notation = '';
+        updateDisplay();
+    }
+
+    function calculate() {
+        try {
+            const result = eval(currentInput);
+            currentInput = result.toString();
+            notation = '';
+            lastOperation = '';
+            updateDisplay();
+        } catch (error) {
+            currentInput = 'Error';
+            notation = '';
+            lastOperation = '';
+            updateDisplay();
+        }
+    }
+
+    function calculateRoot() {
+        if (currentInput !== '') {
+            const num = parseFloat(currentInput);
+            if (num >= 0) {
+                currentInput = Math.sqrt(num).toString();
+                notation = '√(' + currentInput + ')';
+                updateDisplay();
+            } else {
+                currentInput = 'Error';
+                notation = '';
+                updateDisplay();
+            }
+        }
+    }
+
+    function updateDisplay() {
+        document.getElementById('inputDisplay').value = currentInput;
+    }
+</script>
+</body>
+</html>
